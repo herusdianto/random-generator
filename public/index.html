@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Heru Rusdianto">
+    <title>Random Generator - Generate Random Strings, UUID, Password & More</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+    <div class="topbar">
+        <a href="https://github.com/herusdianto/random-generator" class="github-link" target="_blank" rel="noopener noreferrer" title="GitHub Repository">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" fill="currentColor"/>
+            </svg>
+        </a>
+        <div class="theme-toggle">
+            <button id="theme-switch" aria-label="Toggle dark/light mode" class="theme-toggle-btn">
+                <span id="theme-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <header>
+        <h1>Random Generator</h1>
+        <p>Generate random strings, UUIDs, passwords, and more with ease</p>
+        <p class="client-side-note"><strong>100% Client-side:</strong> All generation is done in your browser. <u>No data is sent to any server.</u></p>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Generator Options</h2>
+
+                <!-- Generator Type Selection -->
+                <div class="generator-type-selector">
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="alpha" checked>
+                        <span>Alphabetic</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="numeric">
+                        <span>Numeric</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="alphanumeric">
+                        <span>Alphanumeric</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="special">
+                        <span>SpecialChars</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="password">
+                        <span>Password</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="uuid">
+                        <span>UUID</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="hex">
+                        <span>Hexadecimal</span>
+                    </label>
+                    <label class="generator-option">
+                        <input type="radio" name="generator-type" value="custom">
+                        <span>Custom</span>
+                    </label>
+                </div>
+
+                <!-- Settings -->
+                <div class="settings-section">
+                    <div class="settings-grid">
+                        <div class="setting-item" id="length-setting">
+                            <label for="string-length">Length</label>
+                            <input type="number" id="string-length" value="16" min="1" max="1000">
+                        </div>
+                        <div class="setting-item" id="quantity-setting">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" value="1" min="1" max="100">
+                        </div>
+                    </div>
+
+                    <!-- Custom Characters Input -->
+                    <div id="custom-chars-section" class="custom-chars-section hidden">
+                        <label for="custom-chars">Custom Characters</label>
+                        <input type="text" id="custom-chars" placeholder="Enter characters to use (e.g., ABC123!@#)">
+                    </div>
+
+                    <!-- Character Options -->
+                    <div id="char-options" class="char-options">
+                        <h3>Include Characters</h3>
+                        <div class="options-grid">
+                            <label class="option-item">
+                                <input type="checkbox" id="include-uppercase" checked>
+                                <span>Uppercase (A-Z)</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" id="include-lowercase" checked>
+                                <span>Lowercase (a-z)</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" id="include-numbers">
+                                <span>Numbers (0-9)</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" id="include-symbols">
+                                <span>Symbols (!@#$%...)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Separator Option -->
+                    <div class="separator-section">
+                        <label for="separator">Separator (for multiple results)</label>
+                        <select id="separator">
+                            <option value="newline">New Line</option>
+                            <option value="comma">Comma (,)</option>
+                            <option value="semicolon">Semicolon (;)</option>
+                            <option value="space">Space</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2>Generated Output</h2>
+
+                <textarea id="output-text" readonly placeholder="Generated strings will appear here..."></textarea>
+                <label for="output-text" class="visually-hidden">Generated output</label>
+
+                <!-- Stats -->
+                <div id="stats" class="stats-bar hidden">
+                    <div class="stat-item">
+                        <span class="stat-label">Generated:</span>
+                        <span id="generated-count" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Length:</span>
+                        <span id="string-length-stat" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Type:</span>
+                        <span id="type-stat" class="stat-value">-</span>
+                    </div>
+                </div>
+
+                <div class="output-actions">
+                    <button class="copy-btn" data-target="output-text">Copy</button>
+                    <button class="download-btn" data-content="output-text" data-filename="random_strings.txt">Download</button>
+                    <button class="regenerate-btn" id="regenerate-btn">Regenerate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="status" class="status hidden"></div>
+    </div>
+
+    <footer>
+        <p>Created by <a href="https://herusdianto.github.io/" target="_blank" rel="noopener noreferrer">Heru Rusdianto</a> with AI Assistance</p>
+        <p class="copyright">
+            © <span id="currentYear"></span> All rights reserved.
+        </p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
