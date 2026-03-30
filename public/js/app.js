@@ -41,9 +41,8 @@ class RandomGenerator {
             const el = document.getElementById(id);
             if (el) checkboxStates[id] = el.checked;
         });
-        const output = document.getElementById('output-text')?.value;
         const data = {
-            type, length, quantity, separator, customChars, checkboxStates, output
+            type, length, quantity, separator, customChars, checkboxStates
         };
         localStorage.setItem('randomGenData', JSON.stringify(data));
     }
@@ -65,7 +64,7 @@ class RandomGenerator {
                 if (el) el.checked = checked;
             });
         }
-        if (data.output) document.getElementById('output-text').value = data.output;
+        this.generate();
     }
 
     getSavedType() {
