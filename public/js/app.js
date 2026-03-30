@@ -16,15 +16,61 @@ class RandomGenerator {
     }
 
     init() {
+        this.restoreFromLocalStorage();
         this.bindGeneratorTypeToggle();
         this.bindInputChanges();
         this.bindCopyButtons();
         this.bindDownloadButtons();
         this.bindRegenerateButton();
         this.initThemeToggle();
-        this.updateUIForType('alpha');
+        this.updateUIForType(this.getSavedType() || 'alpha');
         // Auto generate on load
         this.generate();
+    }
+
+    // ==================== Local Storage Save/Restore ====================
+    saveToLocalStorage() {
+        const type = document.querySelector('input[name="generator-type"]:checked')?.value;
+        const length = document.getElementById('string-length')?.value;
+        const quantity = document.getElementById('quantity')?.value;
+        const separator = document.getElementById('separator')?.value;
+        const customChars = document.getElementById('custom-chars')?.value;
+        const checkboxes = ['include-uppercase', 'include-lowercase', 'include-numbers', 'include-symbols'];
+        const checkboxStates = {};
+        checkboxes.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) checkboxStates[id] = el.checked;
+        });
+        const output = document.getElementById('output-text')?.value;
+        const data = {
+            type, length, quantity, separator, customChars, checkboxStates, output
+        };
+        localStorage.setItem('randomGenData', JSON.stringify(data));
+    }
+
+    restoreFromLocalStorage() {
+        const data = JSON.parse(localStorage.getItem('randomGenData') || '{}');
+        if (!data) return;
+        if (data.type) {
+            const radio = document.querySelector(`input[name="generator-type"][value="${data.type}"]`);
+            if (radio) radio.checked = true;
+        }
+        if (data.length) document.getElementById('string-length').value = data.length;
+        if (data.quantity) document.getElementById('quantity').value = data.quantity;
+        if (data.separator) document.getElementById('separator').value = data.separator;
+        if (data.customChars !== undefined) document.getElementById('custom-chars').value = data.customChars;
+        if (data.checkboxStates) {
+            Object.entries(data.checkboxStates).forEach(([id, checked]) => {
+                const el = document.getElementById(id);
+                if (el) el.checked = checked;
+            });
+        }
+        if (data.output) document.getElementById('output-text').value = data.output;
+    }
+
+    getSavedType() {
+        const data = JSON.parse(localStorage.getItem('randomGenData') || '{}');
+        return data.type;
     }
 
     // ==================== Theme Toggle ====================
@@ -57,6 +103,7 @@ class RandomGenerator {
             radio.addEventListener('change', () => {
                 this.updateUIForType(radio.value);
                 this.generate();
+                this.saveToLocalStorage();
             });
         });
     }
@@ -65,25 +112,25 @@ class RandomGenerator {
     bindInputChanges() {
         // Length input
         const lengthInput = document.getElementById('string-length');
-        lengthInput.addEventListener('input', () => this.generate());
+        lengthInput.addEventListener('input', () => { this.generate(); this.saveToLocalStorage(); });
 
         // Quantity input
         const quantityInput = document.getElementById('quantity');
-        quantityInput.addEventListener('input', () => this.generate());
+        quantityInput.addEventListener('input', () => { this.generate(); this.saveToLocalStorage(); });
 
         // Custom chars input
         const customCharsInput = document.getElementById('custom-chars');
-        customCharsInput.addEventListener('input', () => this.generate());
+        customCharsInput.addEventListener('input', () => { this.generate(); this.saveToLocalStorage(); });
 
         // Separator select
         const separatorSelect = document.getElementById('separator');
-        separatorSelect.addEventListener('change', () => this.generate());
+        separatorSelect.addEventListener('change', () => { this.generate(); this.saveToLocalStorage(); });
 
         // Checkboxes
         const checkboxes = ['include-uppercase', 'include-lowercase', 'include-numbers', 'include-symbols'];
         checkboxes.forEach(id => {
             const checkbox = document.getElementById(id);
-            checkbox.addEventListener('change', () => this.generate());
+            checkbox.addEventListener('change', () => { this.generate(); this.saveToLocalStorage(); });
         });
     }
 
@@ -187,6 +234,7 @@ class RandomGenerator {
 
             const output = results.join(separator);
             document.getElementById('output-text').value = output;
+            this.saveToLocalStorage();
 
             // Update stats
             document.getElementById('stats').classList.remove('hidden');
