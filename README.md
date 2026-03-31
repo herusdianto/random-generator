@@ -95,6 +95,10 @@ This generator uses the Web Crypto API (`crypto.getRandomValues()` and `crypto.r
 
 MIT License
 
-## Author
+## Contributing
 
-Created by [Heru Rusdianto](https://herusdianto.github.io/) with AI Assistance
+Contributions are welcome! Feel free to submit a Pull Request.
+
+## Demo
+
+[https://herusdianto.github.io/random-generator/](https://herusdianto.github.io/random-generator/)
